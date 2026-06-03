@@ -11,34 +11,34 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
   const [stage, setStage] = useState<"hidden" | "star-pulse" | "rocket-appear" | "rocket-launch" | "exit">("hidden");
 
   useEffect(() => {
-    // If intro already shown in this session, skip it.
-    const sessionSeen = sessionStorage.getItem("csx_intro_seen");
-    if (sessionSeen === "true") {
-      onComplete();
-      return;
+    const isDev = process.env.NODE_ENV === "development";
+    if (!isDev) {
+      const sessionSeen = sessionStorage.getItem("csx_intro_seen");
+      if (sessionSeen === "true") {
+        onComplete();
+        return;
+      }
     }
 
-    // Always play the full intro — ensures animation is seen on first load.
     // Stage 1: Star pulse starts immediately
     setStage("star-pulse");
 
-    // Stage 2: Rocket materializes at 0.6s
+    // Stage 2: Rocket materializes at 150ms
     const t2 = setTimeout(() => {
       setStage("rocket-appear");
-    }, 600);
+    }, 150);
 
-    // Stage 3: Rocket launches at 1.1s
+    // Stage 3: Rocket launches at 300ms
     const t3 = setTimeout(() => {
       setStage("rocket-launch");
-    }, 1100);
+    }, 300);
 
-    // Stage 4: Exit and reveal hero at 1.5s
+    // Stage 4: Exit and reveal hero at 500ms
     const t4 = setTimeout(() => {
       setStage("exit");
-      // Mark intro as seen for this session
       sessionStorage.setItem("csx_intro_seen", "true");
       onComplete();
-    }, 1500);
+    }, 500);
 
     return () => {
       clearTimeout(t2);
@@ -48,7 +48,6 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
   }, [onComplete]);
 
   const handleSkip = () => {
-    // Skip also sets the session flag
     sessionStorage.setItem("csx_intro_seen", "true");
     onComplete();
   };
@@ -74,7 +73,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
               opacity: [0, 1, 0.6, 1, 0.8],
             }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 1.0, ease: "easeInOut" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
           />
         )}
 
@@ -85,7 +84,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
               className="absolute w-24 h-24 rounded-full border-2 border-pulsar-lavender/40"
               initial={{ scale: 0.2, opacity: 0.9 }}
               animate={{ scale: 3.5, opacity: 0 }}
-              transition={{ duration: 0.65, ease: "easeOut" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             />
 
             {/* Glowing core purple particles */}
@@ -93,7 +92,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
               className="absolute w-12 h-12 rounded-full bg-nebula-purple/30 blur-[20px]"
               initial={{ scale: 0.2, opacity: 0 }}
               animate={{ scale: 2.2, opacity: 1 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.3 }}
             />
 
             {/* Materializing crystal rocket */}
@@ -126,7 +125,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
               src="/logo.png"
               initial={{ y: 0, scale: 1 }}
               animate={{ y: "-120vh", scale: 1.15 }}
-              transition={{ duration: 0.65, ease: [0.6, -0.28, 0.735, 0.045] }}
+              transition={{ duration: 0.45, ease: [0.6, -0.28, 0.735, 0.045] }}
             />
           </div>
         )}
