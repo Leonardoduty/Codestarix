@@ -190,7 +190,7 @@ export default function WaitlistSection() {
   };
 
   return (
-    <section className="py-24 relative z-10" id="waitlist">
+    <section className="py-24 relative z-20" id="waitlist">
       {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] md:w-[35vw] md:h-[35vw] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
@@ -207,7 +207,7 @@ export default function WaitlistSection() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.3 }}
-                className="w-full flex flex-col justify-center"
+                className="w-full flex flex-col justify-center overflow-visible"
               >
                 <div className="text-center mb-8">
                   <h2 className="font-space font-bold text-2xl md:text-3xl text-starlight-white mb-3">
@@ -218,7 +218,7 @@ export default function WaitlistSection() {
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4.5">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4.5 overflow-visible">
                   {/* Full Name field */}
                   <div className="flex flex-col gap-1.5">
                     <input
@@ -258,7 +258,7 @@ export default function WaitlistSection() {
                   </div>
 
                   {/* Phone number with country code selector (optional) */}
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 overflow-visible">
                     <div className="flex items-center gap-1.5 text-on-surface-variant/40 pl-1 mb-0.5">
                       <span className="font-sans text-[10px] md:text-xs">Phone</span>
                       <span className="font-mono text-[9px] md:text-[10px] bg-white/[0.04] border border-glass-stroke rounded-md px-1.5 py-0.5 text-on-surface-variant/35">
