@@ -11,32 +11,27 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
   const [stage, setStage] = useState<"hidden" | "star-pulse" | "rocket-appear" | "rocket-launch" | "exit">("hidden");
 
   useEffect(() => {
-    // Check if user has already seen the intro
-    const isSeen = localStorage.getItem("csx_intro_seen");
-    if (isSeen === "true") {
-      onComplete();
-      return;
-    }
+    // Always play the full intro — ensures animation is seen on every load,
+    // including fast machines where the page renders instantly.
 
-    // Begin sequence stages (Max duration 2.5s total)
+    // Stage 1: Star pulse starts immediately
     setStage("star-pulse");
 
-    // Stage 2: Rocket materializes and particle burst happens at 1.0s
+    // Stage 2: Rocket materializes at 1.1s
     const t2 = setTimeout(() => {
       setStage("rocket-appear");
-    }, 1000);
+    }, 1100);
 
-    // Stage 3: Rocket launches upward at 1.8s
+    // Stage 3: Rocket launches at 2.0s
     const t3 = setTimeout(() => {
       setStage("rocket-launch");
-    }, 1800);
+    }, 2000);
 
-    // Stage 4: Exit overlay and reveal hero at 2.4s
+    // Stage 4: Exit and reveal hero at 2.75s (total ~2.8s)
     const t4 = setTimeout(() => {
       setStage("exit");
-      localStorage.setItem("csx_intro_seen", "true");
       onComplete();
-    }, 2450);
+    }, 2750);
 
     return () => {
       clearTimeout(t2);
@@ -46,7 +41,6 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
   }, [onComplete]);
 
   const handleSkip = () => {
-    localStorage.setItem("csx_intro_seen", "true");
     onComplete();
   };
 
