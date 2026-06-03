@@ -139,11 +139,11 @@ export default function TeamSection() {
                 <hr className="border-t border-white/[0.08] mb-5" />
                 {/* Social button */}
                 {(() => {
-                  const social = TEAM_SOCIALS[member.firstName.toLowerCase() as keyof typeof TEAM_SOCIALS];
-                  const isInstagram = social?.platform === "instagram";
+                  const url = TEAM_SOCIALS[member.firstName.toLowerCase() as keyof typeof TEAM_SOCIALS];
+                  const isInstagram = url?.includes("instagram.com");
                   return (
                     <a
-                      href={social?.url}
+                      href={url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2.5 w-full py-3 px-5 rounded-xl bg-white/[0.02] border border-white/[0.05] text-starlight-white font-sans text-xs tracking-wider uppercase font-semibold transition-all duration-300 hover:bg-white/[0.06] hover:border-white/[0.1] hover:-translate-y-[2px] active:translate-y-0"

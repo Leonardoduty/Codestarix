@@ -10,21 +10,9 @@ export const COMPANY_SOCIALS = {
 };
 
 export const TEAM_SOCIALS = {
-  lavanya: {
-    platform: "linkedin" as const,
-    url: "https://www.linkedin.com/in/lavanya-gajbhiye-080564398?utm_source=share_via&utm_content=profile&utm_medium=member_android",
-  },
-  tanishk: {
-    platform: "linkedin" as const,
-    url: "https://linkedin.com/in/tanishk_placeholder",
-  },
-  hasan: {
-    platform: "instagram" as const,
-    url: "https://instagram.com/hasan_placeholder",
-  },
-  shrijan: {
-    platform: "linkedin" as const,
-    url: "https://www.linkedin.com/in/shrijan-khare-931a10413?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
+  // Replace these with the actual team members' LinkedIn URLs
+  lavanya: "https://www.linkedin.com/in/lavanya-gajbhiye-080564398?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+  tanishk: "https://linkedin.com/in/tanishk_placeholder",
+  hasan: "https://www.instagram.com/hasan._.rauf/",
+  shrijan: "https://www.linkedin.com/in/shrijan-khare-931a10413?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
 };
-
