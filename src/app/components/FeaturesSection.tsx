@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Terminal, ShieldAlert, Zap } from "lucide-react";
+import { Gamepad2, Bot, Award, Store } from "lucide-react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  badge?: string;
+  isMuted?: boolean;
 }
 
-function FeatureCard({ icon, title, description }: FeatureCardProps) {
+function FeatureCard({ icon, title, description, badge, isMuted }: FeatureCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   
   // Motion values for tilt rotations
@@ -85,11 +87,18 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
       {/* Inner ambient light gradient */}
       <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/10 to-transparent blur-[20px] pointer-events-none" />
 
+      {/* Coming Soon Badge in Top Right */}
+      {badge && (
+        <div className="absolute top-6 right-6 px-2.5 py-0.5 rounded-full border border-pulsar-lavender/30 bg-pulsar-lavender/5 text-[10px] font-mono font-medium tracking-wide text-pulsar-lavender/80">
+          {badge}
+        </div>
+      )}
+
       {/* Content wrapper with translateZ to pop forward in 3D space */}
       <div className="relative z-10 flex flex-col items-start" style={{ transform: "translateZ(35px)" }}>
         
         {/* Animated icon circle */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-pulsar-lavender/10 text-pulsar-lavender group-hover:text-tertiary group-hover:border-tertiary/20 transition-colors duration-300 mb-6">
+        <div className={`p-4 rounded-xl bg-white/[0.02] border border-pulsar-lavender/10 text-pulsar-lavender group-hover:text-tertiary group-hover:border-tertiary/20 transition-colors duration-300 mb-6 ${isMuted ? "opacity-60" : ""}`}>
           {icon}
         </div>
 
@@ -110,22 +119,30 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
 export default function FeaturesSection() {
   const list = [
     {
-      icon: <Terminal size={26} />,
-      title: "Intelligent Scaffolding",
+      icon: <Gamepad2 size={26} />,
+      title: "Gamified Learning",
       description:
-        "Generate robust boilerplates instantly. Spent less time setting up configurations and more time coding core product logic.",
+        "Learn coding through XP, levels, streaks, and badges. Every lesson feels like a game. Every skill unlocked feels like a win. You'll actually want to come back tomorrow.",
     },
     {
-      icon: <ShieldAlert size={26} />,
-      title: "Predictive Debugging",
+      icon: <Bot size={26} />,
+      title: "AI-Era Coding Skills",
       description:
-        "Identify potential failure coordinates before they hit production. Our AI models anticipate the bugs you haven't written yet.",
+        "The world builds with AI now. We teach you how to use it properly — how to prompt correctly, spot the mistakes AI makes, and ship code that actually works instead of hoping it does.",
     },
     {
-      icon: <Zap size={26} />,
-      title: "Hyper-Speed Compiles",
+      icon: <Award size={26} />,
+      title: "Coding Scholarship Test (CST)",
       description:
-        "Experience instantaneous feedback loops. Your incremental changes are compiled and visualised faster than a single blink.",
+        "Prove your skills. Take the CST, earn a certificate, and win free access. It's the exam that rewards you for learning — and gives you something real to show for it.",
+    },
+    {
+      icon: <Store size={26} />,
+      title: "Knowledge Marketplace",
+      description:
+        "A marketplace where top developers sell their own courses within the Codestarix ecosystem. More perspectives. More depth. Launching Q1 2027.",
+      badge: "Coming Soon",
+      isMuted: true,
     },
   ];
 
@@ -145,7 +162,7 @@ export default function FeaturesSection() {
             transition={{ duration: 0.6 }}
             className="font-space font-bold text-2xl md:text-4xl text-starlight-white mb-4"
           >
-            Elite Capabilities
+            What you'll master
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
@@ -154,12 +171,12 @@ export default function FeaturesSection() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="font-sans text-xs md:text-sm text-on-surface-variant max-w-md mx-auto"
           >
-            Everything you need to dominate the codebase in a premium gamified environment.
+            Real skills. Real projects. Built for the AI era.
           </motion.p>
         </div>
 
-        {/* 3D tilt features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* 3D tilt features grid - 2x2 layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {list.map((item, index) => (
             <motion.div
               key={item.title}
@@ -172,6 +189,8 @@ export default function FeaturesSection() {
                 icon={item.icon}
                 title={item.title}
                 description={item.description}
+                badge={item.badge}
+                isMuted={item.isMuted}
               />
             </motion.div>
           ))}

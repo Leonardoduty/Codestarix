@@ -97,7 +97,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
             <motion.img
               alt="Rocket materializing"
               className="w-44 h-44 object-contain filter drop-shadow-[0_0_30px_rgba(167,139,250,0.8)]"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3t4stkht05RXJXSvkItMm7cL020kZqE7eM6kz00zuuDgk58hTHATZWRY9PxSPtChyOqBmhIjNeCHKCA56ty0UUODVunODh-7Exn9_tM_3L2O_CtfaxSlTEuPSxQrfqaWkS51Hip-weMO-sr8EUaaReBG_IosGcPXfaqIUyChJs3AueSJW48e-TcJ56BdaCZvulaFoWSN78ruYCHKqPOIE_n4lhejZTJ9-norKIdBkoRXVDuUbICHXbMoq0O_Dw5XMBbeZ71SIPAg"
+              src="/logo.png"
               initial={{ scale: 0.1, opacity: 0, y: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 120, damping: 15 }}
@@ -120,7 +120,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
             <motion.img
               alt="Rocket blastoff"
               className="w-44 h-44 object-contain filter drop-shadow-[0_0_50px_rgba(167,139,250,1)]"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3t4stkht05RXJXSvkItMm7cL020kZqE7eM6kz00zuuDgk58hTHATZWRY9PxSPtChyOqBmhIjNeCHKCA56ty0UUODVunODh-7Exn9_tM_3L2O_CtfaxSlTEuPSxQrfqaWkS51Hip-weMO-sr8EUaaReBG_IosGcPXfaqIUyChJs3AueSJW48e-TcJ56BdaCZvulaFoWSN78ruYCHKqPOIE_n4lhejZTJ9-norKIdBkoRXVDuUbICHXbMoq0O_Dw5XMBbeZ71SIPAg"
+              src="/logo.png"
               initial={{ y: 0, scale: 1 }}
               animate={{ y: "-120vh", scale: 1.15 }}
               transition={{ duration: 0.65, ease: [0.6, -0.28, 0.735, 0.045] }}

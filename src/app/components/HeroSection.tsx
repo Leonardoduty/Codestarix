@@ -1,64 +1,60 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import RocketCanvas from "./RocketCanvas";
 import { ArrowRight } from "lucide-react";
+import MagneticButton from "./MagneticButton";
 
 export default function HeroSection() {
-  const [typedText, setTypedText] = useState("");
+  const [typedLines, setTypedLines] = useState<string[]>(["", "", ""]);
+  const [currentLineActive, setCurrentLineActive] = useState(0);
+  const [isDone, setIsDone] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
-  const headline = "Code smarter. Build faster. Break nothing.";
   const headlineWords = ["Code smarter.", "Build faster.", "Break nothing."];
 
-  // Magnetic CTA mouse coordinates
-  const ctaRef = useRef<HTMLAnchorElement | null>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  
-  const springSetting = { stiffness: 120, damping: 15, mass: 0.2 };
-  const springX = useSpring(x, springSetting);
-  const springY = useSpring(y, springSetting);
+
 
   // realistic typing simulator
   useEffect(() => {
-    let wordIndex = 0;
-    let charIndex = 0;
-    let currentText = "";
-    let isDeleting = false;
-    let typingDelay = 100;
+    let currentLine = 0;
+    let currentChar = 0;
+    let lines = ["", "", ""];
 
     const tick = () => {
-      const fullText = headlineWords[wordIndex];
-      
-      if (isDeleting) {
-        currentText = fullText.substring(0, currentText.length - 1);
-        typingDelay = 40; // delete faster
+      if (currentLine >= headlineWords.length) {
+        setIsDone(true);
+        setCursorVisible(false);
+        return;
+      }
+
+      const targetWord = headlineWords[currentLine];
+      if (currentChar < targetWord.length) {
+        lines[currentLine] = targetWord.substring(0, currentChar + 1);
+        setTypedLines([...lines]);
+        currentChar++;
+        
+        // variable typing speed
+        const typingDelay = Math.random() * 60 + 50;
+        setTimeout(tick, typingDelay);
       } else {
-        currentText = fullText.substring(0, currentText.length + 1);
-        typingDelay = Math.random() * 60 + 50; // variable typing speed
-      }
-
-      setTypedText(currentText);
-
-      // Determine transitions
-      if (!isDeleting && currentText === fullText) {
-        // Stop typing at end of word for a brief moment
-        typingDelay = 1800;
-        
-        // If it's the last word, we stop typing altogether to let it sit!
-        if (wordIndex === headlineWords.length - 1) {
-          return; 
+        // Line is complete. If it's the last line:
+        if (currentLine === headlineWords.length - 1) {
+          // Final blink delay (600ms) then set done
+          setTimeout(() => {
+            setIsDone(true);
+            setCursorVisible(false);
+          }, 600);
+        } else {
+          // Intermediate line: wait for 2 cursor blinks (~1200ms) before starting next line
+          setTimeout(() => {
+            currentLine++;
+            currentChar = 0;
+            setCurrentLineActive(currentLine);
+            tick();
+          }, 1200);
         }
-        
-        isDeleting = true;
-      } else if (isDeleting && currentText === "") {
-        isDeleting = false;
-        wordIndex = (wordIndex + 1) % headlineWords.length;
-        typingDelay = 300; // delay before typing next word
       }
-
-      setTimeout(tick, typingDelay);
     };
 
     const initialTimer = setTimeout(tick, 1000);
@@ -67,32 +63,14 @@ export default function HeroSection() {
 
   // realistic cursor blink
   useEffect(() => {
+    if (isDone) return;
     const interval = setInterval(() => {
       setCursorVisible((v) => !v);
     }, 550);
     return () => clearInterval(interval);
-  }, []);
+  }, [isDone]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ctaRef.current) return;
-    const rect = ctaRef.current.getBoundingClientRect();
-    
-    // Calculate distance from mouse pointer to button center
-    const btnCenterX = rect.left + rect.width / 2;
-    const btnCenterY = rect.top + rect.height / 2;
-    
-    const distanceX = e.clientX - btnCenterX;
-    const distanceY = e.clientY - btnCenterY;
-    
-    // Magnetic pull constraint (pull button up to 25px max)
-    x.set(distanceX * 0.35);
-    y.set(distanceY * 0.35);
-  };
 
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="home">
@@ -105,20 +83,31 @@ export default function HeroSection() {
           
           {/* Main dynamic typing header container */}
           <h1 className="font-space font-bold tracking-tight text-[38px] leading-[1.1] md:text-[62px] text-starlight-white mb-6 min-h-[120px] md:min-h-[210px] w-full max-w-[620px]">
-            {typedText}
-            <span
-              className={`inline-block w-[3px] h-[35px] md:h-[55px] ml-1 bg-gradient-to-t from-pulsar-lavender to-primary transition-opacity ${
-                cursorVisible ? "opacity-100" : "opacity-0"
-              }`}
-              style={{ verticalAlign: "middle" }}
-            />
+            {headlineWords.map((word, index) => {
+              if (index > currentLineActive && typedLines[index] === "") {
+                return null;
+              }
+              return (
+                <span key={index} className="block">
+                  {typedLines[index]}
+                  {!isDone && index === currentLineActive && (
+                    <span
+                      className={`inline-block w-[3px] h-[30px] md:h-[50px] ml-1.5 bg-gradient-to-t from-pulsar-lavender to-primary transition-opacity ${
+                        cursorVisible ? "opacity-100" : "opacity-0"
+                      }`}
+                      style={{ verticalAlign: "middle" }}
+                    />
+                  )}
+                </span>
+              );
+            })}
           </h1>
 
           {/* Subtext description fading in */}
           <motion.p
             initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            animate={isDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="font-sans text-sm md:text-base text-on-surface-variant max-w-lg mb-10 leading-relaxed"
           >
             Embark on a cinematic coding journey. Master the skills of tomorrow in a gamified universe designed for elite developers.
@@ -127,20 +116,18 @@ export default function HeroSection() {
           {/* CTA containing premium magnetic springs */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            animate={isDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
           >
-            <motion.a
-              ref={ctaRef}
-              href="#waitlist"
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{ x: springX, y: springY }}
-              className="relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-primary-container to-nebula-purple text-starlight-white font-mono text-xs tracking-widest font-semibold hover:glow-effect hover:scale-105 active:scale-95 duration-200"
-            >
-              Claim Your Spot
-              <ArrowRight size={14} className="animate-pulse" />
-            </motion.a>
+            <MagneticButton>
+              <a
+                href="#waitlist"
+                className="relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-primary-container to-nebula-purple text-starlight-white font-mono text-xs tracking-widest font-semibold hover:glow-effect hover:scale-105 active:scale-95 duration-200"
+              >
+                Claim Your Spot
+                <ArrowRight size={14} className="animate-pulse" />
+              </a>
+            </MagneticButton>
           </motion.div>
         </div>
 

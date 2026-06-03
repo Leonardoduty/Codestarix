@@ -154,7 +154,7 @@ export default function RocketCanvas() {
           ref={rocketImgRef}
           alt="Codestarix Crystal Rocket"
           className="w-full h-full object-contain filter drop-shadow-[0_0_35px_rgba(167,139,250,0.55)] rocket-halo select-none pointer-events-none"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3t4stkht05RXJXSvkItMm7cL020kZqE7eM6kz00zuuDgk58hTHATZWRY9PxSPtChyOqBmhIjNeCHKCA56ty0UUODVunODh-7Exn9_tM_3L2O_CtfaxSlTEuPSxQrfqaWkS51Hip-weMO-sr8EUaaReBG_IosGcPXfaqIUyChJs3AueSJW48e-TcJ56BdaCZvulaFoWSN78ruYCHKqPOIE_n4lhejZTJ9-norKIdBkoRXVDuUbICHXbMoq0O_Dw5XMBbeZ71SIPAg"
+          src="/logo.png"
         />
       </motion.div>
     </div>
