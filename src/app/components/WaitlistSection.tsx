@@ -195,7 +195,7 @@ export default function WaitlistSection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] md:w-[35vw] md:h-[35vw] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-[620px] mx-auto px-6 md:px-gutter">
-        <div className="glass-panel p-8 md:p-12 rounded-3xl relative overflow-hidden min-h-[380px] flex flex-col justify-center select-none shadow-[inset_0_0_30px_rgba(167,139,250,0.06)] border border-pulsar-lavender/20">
+        <div className="glass-panel p-8 md:p-12 rounded-3xl relative overflow-visible min-h-[380px] flex flex-col justify-center select-none shadow-[inset_0_0_30px_rgba(167,139,250,0.06)] border border-pulsar-lavender/20">
           
           <AnimatePresence mode="wait">
             
