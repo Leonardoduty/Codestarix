@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLenis } from "@/lib/useLenis";
 import StarField from "@/app/components/StarField";
 import IntroSequence from "@/app/components/IntroSequence";
@@ -17,8 +17,14 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Home() {
   const [introFinished, setIntroFinished] = useState(false);
 
-  // Initialize high-end Lenis smooth scrolling
+  // Initialize smooth scrolling
   useLenis();
+  useEffect(() => {
+    const seen = sessionStorage.getItem("csx_intro_seen");
+    if (seen === "true") {
+      setIntroFinished(true);
+    }
+  }, []);
 
   return (
     <>

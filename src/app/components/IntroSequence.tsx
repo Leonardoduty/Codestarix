@@ -11,9 +11,14 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
   const [stage, setStage] = useState<"hidden" | "star-pulse" | "rocket-appear" | "rocket-launch" | "exit">("hidden");
 
   useEffect(() => {
-    // Always play the full intro — ensures animation is seen on every load,
-    // including fast machines where the page renders instantly.
+    // If intro already shown in this session, skip it.
+    const sessionSeen = sessionStorage.getItem("csx_intro_seen");
+    if (sessionSeen === "true") {
+      onComplete();
+      return;
+    }
 
+    // Always play the full intro — ensures animation is seen on first load.
     // Stage 1: Star pulse starts immediately
     setStage("star-pulse");
 
@@ -30,6 +35,8 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
     // Stage 4: Exit and reveal hero at 1.5s
     const t4 = setTimeout(() => {
       setStage("exit");
+      // Mark intro as seen for this session
+      sessionStorage.setItem("csx_intro_seen", "true");
       onComplete();
     }, 1500);
 
@@ -41,6 +48,8 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
   }, [onComplete]);
 
   const handleSkip = () => {
+    // Skip also sets the session flag
+    sessionStorage.setItem("csx_intro_seen", "true");
     onComplete();
   };
 
