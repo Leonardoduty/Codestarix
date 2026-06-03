@@ -5,14 +5,26 @@
 
 export const COMPANY_SOCIALS = {
   // Replace these with the actual handles later (e.g. codestarix)
-  instagram: "https://instagram.com/codestarix_placeholder",
-  linkedin: "https://linkedin.com/company/codestarix_placeholder",
+  instagram: "https://www.instagram.com/codestarix/",
+  linkedin: "https://www.linkedin.com/company/codestarix",
 };
 
 export const TEAM_SOCIALS = {
-  // Replace these with the actual team members' LinkedIn URLs
-  lavanya: "https://linkedin.com/in/lavanya_placeholder",
-  tanishk: "https://linkedin.com/in/tanishk_placeholder",
-  hasan: "https://linkedin.com/in/hasan_placeholder",
-  shrijan: "https://linkedin.com/in/shrijan_placeholder",
+  lavanya: {
+    platform: "linkedin" as const,
+    url: "https://www.linkedin.com/in/lavanya-gajbhiye-080564398?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+  },
+  tanishk: {
+    platform: "linkedin" as const,
+    url: "https://linkedin.com/in/tanishk_placeholder",
+  },
+  hasan: {
+    platform: "instagram" as const,
+    url: "https://instagram.com/hasan_placeholder",
+  },
+  shrijan: {
+    platform: "linkedin" as const,
+    url: "https://www.linkedin.com/in/shrijan-khare-931a10413?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
 };
+

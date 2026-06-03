@@ -137,18 +137,37 @@ export default function TeamSection() {
               <div className="relative z-10 mt-auto">
                 {/* Thin horizontal divider */}
                 <hr className="border-t border-white/[0.08] mb-5" />
-                {/* LinkedIn button */}
-                <a
-                  href={TEAM_SOCIALS[member.firstName.toLowerCase() as keyof typeof TEAM_SOCIALS]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2.5 w-full py-3 px-5 rounded-xl bg-white/[0.02] border border-white/[0.05] text-starlight-white font-sans text-xs tracking-wider uppercase font-semibold transition-all duration-300 hover:bg-white/[0.06] hover:border-white/[0.1] hover:-translate-y-[2px] active:translate-y-0"
-                >
-                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                  </svg>
-                  <span>LinkedIn</span>
-                </a>
+                {/* Social button */}
+                {(() => {
+                  const social = TEAM_SOCIALS[member.firstName.toLowerCase() as keyof typeof TEAM_SOCIALS];
+                  const isInstagram = social?.platform === "instagram";
+                  return (
+                    <a
+                      href={social?.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2.5 w-full py-3 px-5 rounded-xl bg-white/[0.02] border border-white/[0.05] text-starlight-white font-sans text-xs tracking-wider uppercase font-semibold transition-all duration-300 hover:bg-white/[0.06] hover:border-white/[0.1] hover:-translate-y-[2px] active:translate-y-0"
+                    >
+                      {isInstagram ? (
+                        <>
+                          <svg className="w-3.5 h-3.5 stroke-current fill-none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                          </svg>
+                          <span>Instagram</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                          </svg>
+                          <span>LinkedIn</span>
+                        </>
+                      )}
+                    </a>
+                  );
+                })()}
               </div>
             </motion.div>
           ))}
