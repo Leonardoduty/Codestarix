@@ -17,21 +17,21 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
     // Stage 1: Star pulse starts immediately
     setStage("star-pulse");
 
-    // Stage 2: Rocket materializes at 1.1s
+    // Stage 2: Rocket materializes at 0.6s
     const t2 = setTimeout(() => {
       setStage("rocket-appear");
-    }, 1100);
+    }, 600);
 
-    // Stage 3: Rocket launches at 2.0s
+    // Stage 3: Rocket launches at 1.1s
     const t3 = setTimeout(() => {
       setStage("rocket-launch");
-    }, 2000);
+    }, 1100);
 
-    // Stage 4: Exit and reveal hero at 2.75s (total ~2.8s)
+    // Stage 4: Exit and reveal hero at 1.5s
     const t4 = setTimeout(() => {
       setStage("exit");
       onComplete();
-    }, 2750);
+    }, 1500);
 
     return () => {
       clearTimeout(t2);
