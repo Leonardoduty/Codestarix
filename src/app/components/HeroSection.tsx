@@ -77,10 +77,109 @@ export default function HeroSection() {
       {/* Central Nebula background ambient light */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[50vw] md:h-[50vw] rounded-full bg-nebula-purple/10 blur-[130px] pointer-events-none z-0" />
 
+      {/* Aurora Glow Blobs Behind Hero */}
+      {/* Blob 1 — Left side */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: "20%",
+          left: "-5%",
+          background: "radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%)",
+          filter: "blur(80px)",
+          pointerEvents: "none",
+          willChange: "transform",
+          zIndex: 0,
+        }}
+        className="w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
+        animate={{
+          x: [-20, 0],
+          y: [30, 0],
+        }}
+        transition={{
+          duration: 8,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+      />
+
+      {/* Blob 2 — Right side */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: "10%",
+          right: "-5%",
+          background: "radial-gradient(circle, rgba(109, 40, 217, 0.15) 0%, transparent 70%)",
+          filter: "blur(100px)",
+          pointerEvents: "none",
+          willChange: "transform",
+          zIndex: 0,
+        }}
+        className="w-[360px] h-[240px] md:w-[600px] md:h-[400px]"
+        animate={{
+          x: [20, 0],
+          y: [-25, 0],
+        }}
+        transition={{
+          duration: 10,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+      />
+
+      {/* Blob 3 — Bottom centre */}
+      <motion.div
+        style={{
+          position: "absolute",
+          bottom: "0%",
+          left: "30%",
+          background: "radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%)",
+          filter: "blur(90px)",
+          pointerEvents: "none",
+          willChange: "transform",
+          zIndex: 0,
+        }}
+        className="w-[240px] h-[180px] md:w-[400px] md:h-[300px]"
+        animate={{
+          x: [15, 0],
+          y: [20, 0],
+        }}
+        transition={{
+          duration: 12,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+      />
+
       <div className="relative z-10 w-full max-w-container-max mx-auto px-6 md:px-gutter flex flex-col md:flex-row items-center justify-between gap-12 py-12">
         {/* Left Side: Editorial Typography & Magnetic CTA */}
         <div className="flex-1 text-center md:text-left flex flex-col items-center md:items-start select-none">
           
+          {/* Pill Announcement Label */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="relative overflow-hidden inline-flex items-center justify-center rounded-full px-[18px] py-[6px] bg-[rgba(124,58,237,0.15)] border border-[rgba(124,58,237,0.4)] text-[11px] font-semibold tracking-[0.2em] text-[rgba(167,139,250,0.9)] uppercase select-none transition-all duration-200 hover:border-[rgba(124,58,237,0.8)] hover:bg-[rgba(124,58,237,0.25)] mb-6 cursor-default"
+          >
+            <span className="relative z-10">✦ THE CODING PLATFORM FOR THE AI ERA ✦</span>
+            {/* Shimmer sweep effect */}
+            <motion.div
+              className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-20 pointer-events-none"
+              animate={{
+                left: ["-100%", "200%"],
+              }}
+              transition={{
+                repeat: Infinity,
+                repeatDelay: 4,
+                duration: 1.2,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.div>
+
           {/* Main dynamic typing header container */}
           <h1 className="font-space font-bold tracking-tight text-[38px] leading-[1.1] md:text-[62px] text-starlight-white mb-6 min-h-[120px] md:min-h-[210px] w-full max-w-[620px]">
             {headlineWords.map((word, index) => {
