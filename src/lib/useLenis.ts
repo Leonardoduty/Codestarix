@@ -45,6 +45,5 @@ export function useLenis() {
       resizeObserver.disconnect();
     };
   }, []);
-
-  return lenisRef.current;
 }
+

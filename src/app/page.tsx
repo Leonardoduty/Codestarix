@@ -10,6 +10,7 @@ import FeaturesSection from "@/app/components/FeaturesSection";
 import MarqueeTicker from "@/app/components/MarqueeTicker";
 import RoadmapSection from "@/app/components/RoadmapSection";
 import WaitlistSection from "@/app/components/WaitlistSection";
+import XPProgressBar from "@/app/components/XPProgressBar";
 import Footer from "@/app/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -52,6 +53,9 @@ export default function Home() {
               <MarqueeTicker direction="right" />
               <WaitlistSection />
             </main>
+
+            {/* Bottom XP Progression status HUD */}
+            <XPProgressBar />
 
             {/* Footer */}
             <Footer />

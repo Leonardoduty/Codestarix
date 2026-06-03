@@ -5,7 +5,7 @@ import { COMPANY_SOCIALS } from "@/config/socials";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#0e0e13] border-t border-glass-stroke py-10 w-full z-10 overflow-hidden">
+    <footer className="relative bg-[#0e0e13] border-t border-glass-stroke pt-5 pb-14 w-full z-10 overflow-hidden">
       {/* Top visual glow accents */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-pulsar-lavender/30 to-transparent" />
 

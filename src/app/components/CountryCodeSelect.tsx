@@ -3,12 +3,14 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import * as Flags from "country-flag-icons/react/3x2";
 
 export interface CountryOption {
   flag: string;
   name: string;
   code: string;
   id: string;
+  Component: React.ComponentType<{ className?: string; title?: string }>;
 }
 
 export const COUNTRIES: CountryOption[] = [
@@ -251,11 +253,15 @@ export const COUNTRIES: CountryOption[] = [
   { flag: '🇿🇲', name: 'Zambia', code: '+260', id: 'ZM' },
   { flag: '🇿🇼', name: 'Zimbabwe', code: '+263', id: 'ZW' },
   { flag: '🇦🇽', name: 'Åland Islands', code: '+358', id: 'AX' },
-];
+].map((c) => ({
+  ...c,
+  Component: (Flags as any)[c.id] || (() => null),
+}));
+
 
 interface CountryCodeSelectProps {
-  selected: string;
-  onChange: (code: string) => void;
+  selected: CountryOption;
+  onChange: (country: CountryOption) => void;
 }
 
 export default function CountryCodeSelect({ selected, onChange }: CountryCodeSelectProps) {
@@ -266,7 +272,7 @@ export default function CountryCodeSelect({ selected, onChange }: CountryCodeSel
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  const selectedCountry = COUNTRIES.find((c) => c.code === selected) || COUNTRIES.find((c) => c.id === "IN")!;
+  const selectedCountry = selected || COUNTRIES.find((c) => c.id === "IN") || COUNTRIES[0];
 
   const filteredCountries = search.trim()
     ? COUNTRIES.filter(
@@ -339,7 +345,7 @@ export default function CountryCodeSelect({ selected, onChange }: CountryCodeSel
         onClick={handleToggle}
         className="flex items-center gap-1.5 px-4 py-3.5 text-xs md:text-sm text-pulsar-lavender font-mono focus:outline-none transition-all duration-300 cursor-pointer hover:bg-white/[0.03] select-none h-full rounded-l-xl"
       >
-        <span className="text-base select-none">{selectedCountry.flag}</span>
+        <selectedCountry.Component className="w-5 h-3 rounded-sm" title={selectedCountry.name} />
         <span>{selectedCountry.code}</span>
         <ChevronDown
           size={12}
@@ -389,13 +395,13 @@ export default function CountryCodeSelect({ selected, onChange }: CountryCodeSel
                 </div>
               ) : (
                 filteredCountries.map((c) => {
-                  const isSelected = c.code === selected && c.id === selectedCountry.id;
+                  const isSelected = c.id === selectedCountry.id;
                   return (
                     <button
                       key={c.id}
                       type="button"
                       onClick={() => {
-                        onChange(c.code);
+                        onChange(c);
                         setIsOpen(false);
                         setSearch("");
                       }}
@@ -406,7 +412,7 @@ export default function CountryCodeSelect({ selected, onChange }: CountryCodeSel
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="text-base select-none">{c.flag}</span>
+                        <c.Component className="w-5 h-3 rounded-sm" title={c.name} />
                         <span className="truncate max-w-[140px]">{c.name}</span>
                       </div>
                       <span className="font-mono text-xs opacity-80">{c.code}</span>

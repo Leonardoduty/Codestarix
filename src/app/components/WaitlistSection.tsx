@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase, isSupabaseConfigured, mockWaitlistDb } from "@/lib/supabase";
 import { sendWebhookBackup } from "@/lib/googleWebhook";
 import { CheckCircle2, Copy, Share2, AlertCircle, Loader2 } from "lucide-react";
-import CountryCodeSelect from "./CountryCodeSelect";
+import CountryCodeSelect, { COUNTRIES, CountryOption } from "./CountryCodeSelect";
 import MagneticButton from "./MagneticButton";
 
 const schema = zod.object({
@@ -27,6 +27,10 @@ const schema = zod.object({
 
 type FormValues = zod.infer<typeof schema>;
 
+const generateReferralCode = () => {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+};
+
 export default function WaitlistSection() {
   const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
   const [loading, setLoading] = useState(false);
@@ -35,7 +39,9 @@ export default function WaitlistSection() {
   const [referralUrl, setReferralUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [peopleCount, setPeopleCount] = useState(1240);
-  const [selectedCode, setSelectedCode] = useState("+91");
+  const [selectedCountry, setSelectedCountry] = useState<CountryOption>(
+    COUNTRIES.find((c) => c.id === "IN") || COUNTRIES[0]
+  );
 
   const {
     register,
@@ -45,9 +51,6 @@ export default function WaitlistSection() {
     resolver: zodResolver(schema),
   });
 
-  const generateReferralCode = () => {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  };
 
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
@@ -66,7 +69,7 @@ export default function WaitlistSection() {
     try {
       if (isSupabaseConfigured && supabase) {
         // Real Supabase insert
-        const fullPhone = data.phone ? `${selectedCode}${data.phone}` : "";
+        const fullPhone = data.phone ? `${selectedCountry.code}${data.phone}` : "";
         const { error } = await supabase.from("waitlist_entries").insert({
           name: data.name,
           email: data.email,
@@ -84,7 +87,7 @@ export default function WaitlistSection() {
         }
       } else {
         // Safe Demo Mock DB fallback
-        const fullPhone = data.phone ? `${selectedCode}${data.phone}` : "";
+        const fullPhone = data.phone ? `${selectedCountry.code}${data.phone}` : "";
         await mockWaitlistDb.insert({
           name: data.name,
           email: data.email,
@@ -101,7 +104,7 @@ export default function WaitlistSection() {
       setReferralUrl(inviteUrl);
 
       // Async Backup Google Webhook - wrap inside try/catch so failure never blocks submission
-      const webhookPhone = data.phone ? `${selectedCode}${data.phone}` : "";
+      const webhookPhone = data.phone ? `${selectedCountry.code}${data.phone}` : "";
       sendWebhookBackup({
         name: data.name,
         email: data.email,
@@ -115,8 +118,9 @@ export default function WaitlistSection() {
 
       // Advance UI Success flow stages
       setStep(1); // Checkmark stage
-    } catch (err: any) {
-      setDbError(err.message || "Something went wrong. Please try again.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setDbError(message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -146,7 +150,7 @@ export default function WaitlistSection() {
   const [currentCounterVal, setCurrentCounterVal] = useState(0);
   useEffect(() => {
     if (step === 2) {
-      let start = 0;
+      const start = 0;
       const end = peopleCount;
       const duration = 1200; // ms
       const startTime = performance.now();
@@ -274,8 +278,8 @@ export default function WaitlistSection() {
                     >
                       {/* Country code selector */}
                       <CountryCodeSelect
-                        selected={selectedCode}
-                        onChange={setSelectedCode}
+                        selected={selectedCountry}
+                        onChange={setSelectedCountry}
                       />
                       
                       {/* Vertical Divider */}
@@ -339,7 +343,7 @@ export default function WaitlistSection() {
                   <CheckCircle2 size={54} className="stroke-[1.5]" />
                 </motion.div>
                 <h3 className="font-space font-bold text-2xl md:text-3xl text-starlight-white mb-2 leading-snug">
-                  🎉 You're on the list!
+                  🎉 You&apos;re on the list!
                 </h3>
               </motion.div>
             )}
@@ -354,7 +358,7 @@ export default function WaitlistSection() {
                 className="w-full flex flex-col justify-center items-center text-center px-4"
               >
                 <p className="font-sans text-sm md:text-base text-starlight-white leading-relaxed">
-                  You're joining
+                  You&apos;re joining
                 </p>
                 {/* Count-up rolling number display */}
                 <span className="text-3xl md:text-5xl font-space font-bold text-pulsar-lavender my-4 tracking-tight filter drop-shadow-[0_0_10px_rgba(167,139,250,0.5)]">
