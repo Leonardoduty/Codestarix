@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm --filter @workspace/codestarix run build",
+  "outputDirectory": "artifacts/codestarix/dist/public",
+  "installCommand": "pnpm install --frozen-lockfile"
+}
