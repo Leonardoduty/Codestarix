@@ -63,6 +63,7 @@ export default function XPProgressBar() {
       // If user scrolls back up, silently reduce level without triggering celebratory animations
       setPrevLevel(level);
     }
+    return undefined;
   }, [level, prevLevel]);
 
   return (

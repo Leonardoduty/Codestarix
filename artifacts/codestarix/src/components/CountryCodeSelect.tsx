@@ -334,6 +334,7 @@ export default function CountryCodeSelect({ selected, onChange }: CountryCodeSel
       el.addEventListener("wheel", handleWheel, { passive: false });
       return () => el.removeEventListener("wheel", handleWheel);
     }
+    return undefined;
   }, [isOpen, handleWheel]);
 
   return (

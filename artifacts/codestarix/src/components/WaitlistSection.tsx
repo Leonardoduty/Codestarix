@@ -133,6 +133,7 @@ export default function WaitlistSection() {
       }, 1600);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [step]);
 
   // Step 2 counter auto-advance timer
@@ -143,6 +144,7 @@ export default function WaitlistSection() {
       }, 3500);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [step]);
 
   // Count-up animation driver inside Step 2
