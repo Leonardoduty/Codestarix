@@ -1,5 +1,6 @@
 {
-  "buildCommand": "pnpm --filter @workspace/codestarix run build",
-  "outputDirectory": "artifacts/codestarix/dist",
-  "installCommand": "pnpm install --frozen-lockfile"
+  "rootDirectory": "artifacts/codestarix",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "buildCommand": "vite build --config vite.config.ts",
+  "outputDirectory": "dist"
 }
