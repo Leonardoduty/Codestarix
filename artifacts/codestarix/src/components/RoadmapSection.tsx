@@ -108,30 +108,30 @@ export default function RoadmapSection() {
   const milestones: Milestone[] = [
     {
       icon: <Compass size={20} />,
-      quarter: "Q3 2024",
+      quarter: "Q3 2026",
       title: "The Launchpad",
-      description: "Private beta release for early waitlist adopters. Core gamified courses unlocked for the first cohort.",
-      status: "completed",
-    },
-    {
-      icon: <Orbit size={20} />,
-      quarter: "Q4 2024",
-      title: "Orbital Insertion",
-      description: "Public launch. Integration of predictive AI debuggers, custom editor layouts, and community features.",
-      status: "completed",
-    },
-    {
-      icon: <Rocket size={20} />,
-      quarter: "Q2 2026",
-      title: "Ignition",
-      description: "CST launch, waitlist opens, first cohort onboards. The real journey begins.",
+      description: "Waitlist opens, first cohort onboards. Core gamified courses unlock for early adopters.",
       status: "current",
     },
     {
-      icon: <Globe size={20} />,
+      icon: <Orbit size={20} />,
       quarter: "Q4 2026",
+      title: "Orbital Insertion",
+      description: "CST exam goes live. AI-powered debugger and custom editor layouts ship to all users.",
+      status: "future",
+    },
+    {
+      icon: <Rocket size={20} />,
+      quarter: "Q2 2027",
+      title: "Ignition",
+      description: "Full public platform launch. Multiplayer coding lobbies, live challenges, and leaderboards go live.",
+      status: "future",
+    },
+    {
+      icon: <Globe size={20} />,
+      quarter: "Q4 2027",
       title: "Deep Space",
-      description: "Full platform launch, Knowledge Marketplace opens, Ava AI coach goes live.",
+      description: "Knowledge Marketplace opens, Ava AI coach goes live. The ecosystem expands beyond the platform.",
       status: "future",
     },
   ];

@@ -2,6 +2,33 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const navLinks = [
+  { name: "Features", href: "#features" },
+  { name: "Roadmap", href: "#roadmap" },
+  { name: "Waitlist", href: "#waitlist" },
+  { name: "About", href: "/about" },
+];
+
+function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
+  if (href.startsWith("#")) {
+    e.preventDefault();
+    const id = href.slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  } else if (href.startsWith("/#")) {
+    e.preventDefault();
+    const id = href.slice(2);
+    if (window.location.pathname !== "/") {
+      window.location.href = href;
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -11,13 +38,6 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const navLinks = [
-    { name: "Features", href: "/#features" },
-    { name: "Roadmap", href: "/#roadmap" },
-    { name: "Waitlist", href: "/#waitlist" },
-    { name: "About", href: "/about" },
-  ];
 
   return (
     <nav
@@ -49,6 +69,7 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               style={{ transition: "color 0.2s ease" }}
               className="font-sans text-sm text-[#8B89A0] hover:text-[#F0EEF8]"
             >
@@ -60,7 +81,8 @@ export default function Navbar() {
         {/* Desktop CTA */}
         <div className="hidden md:block">
           <a
-            href="/#waitlist"
+            href="#waitlist"
+            onClick={(e) => handleNavClick(e, "#waitlist")}
             style={{
               background: "#7C3AED",
               borderRadius: "8px",
@@ -100,22 +122,26 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
             className="absolute top-full left-0 w-full overflow-hidden md:hidden"
-            style={{ background: "rgba(10,10,15,0.95)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+            style={{
+              background: "rgba(10,10,15,0.95)",
+              backdropFilter: "blur(16px)",
+              borderBottom: "1px solid rgba(255,255,255,0.06)",
+            }}
           >
             <div className="flex flex-col px-6 py-7 gap-5">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => { handleNavClick(e, link.href); setIsOpen(false); }}
                   className="font-sans text-sm text-[#8B89A0] hover:text-[#F0EEF8] py-2 border-b border-white/[0.04] transition-colors"
                 >
                   {link.name}
                 </a>
               ))}
               <a
-                href="/#waitlist"
-                onClick={() => setIsOpen(false)}
+                href="#waitlist"
+                onClick={(e) => { handleNavClick(e, "#waitlist"); setIsOpen(false); }}
                 style={{ background: "#7C3AED", borderRadius: "8px" }}
                 className="w-full text-center py-3.5 text-[#F0EEF8] font-mono text-xs tracking-widest font-semibold uppercase mt-2"
               >

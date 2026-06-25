@@ -355,7 +355,7 @@ export default function WaitlistSection() {
 
                   {/* Trust line */}
                   <p className="text-center font-sans text-[12px]" style={{ color: "#4A4860" }}>
-                    🔒 No spam. Unsubscribe anytime.
+                    No spam. Unsubscribe anytime.
                   </p>
                 </form>
               </motion.div>
