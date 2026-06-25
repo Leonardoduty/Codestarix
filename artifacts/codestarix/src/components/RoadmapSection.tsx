@@ -1,70 +1,157 @@
-
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Compass, Orbit, Radio } from "lucide-react";
+import { Compass, Orbit, Rocket, Globe } from "lucide-react";
+
+type MilestoneStatus = "completed" | "current" | "future";
 
 interface Milestone {
   icon: React.ReactNode;
   quarter: string;
   title: string;
   description: string;
-  status: "completed" | "current" | "future";
+  status: MilestoneStatus;
+}
+
+const STATUS_PILL: Record<MilestoneStatus, { label: string; style: React.CSSProperties }> = {
+  completed: {
+    label: "COMPLETED",
+    style: {
+      background: "rgba(34,197,94,0.1)",
+      border: "1px solid rgba(34,197,94,0.25)",
+      color: "#4ade80",
+    },
+  },
+  current: {
+    label: "IN PROGRESS",
+    style: {
+      background: "rgba(124,58,237,0.15)",
+      border: "1px solid rgba(124,58,237,0.35)",
+      color: "#9D6FFF",
+    },
+  },
+  future: {
+    label: "UPCOMING",
+    style: {
+      background: "rgba(74,72,96,0.2)",
+      border: "1px solid rgba(74,72,96,0.4)",
+      color: "#4A4860",
+    },
+  },
+};
+
+function StatusPill({ status }: { status: MilestoneStatus }) {
+  const cfg = STATUS_PILL[status];
+  return (
+    <span style={{
+      ...cfg.style,
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: "10px",
+      borderRadius: "9999px",
+      padding: "3px 10px",
+      letterSpacing: "0.08em",
+      display: "inline-block",
+      marginBottom: "12px",
+    }}>
+      {cfg.label}
+    </span>
+  );
+}
+
+function MilestoneNode({ status }: { status: MilestoneStatus }) {
+  const baseStyle: React.CSSProperties = {
+    width: "48px",
+    height: "48px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    border: "2px solid",
+    position: "relative",
+    zIndex: 10,
+    flexShrink: 0,
+  };
+
+  if (status === "completed") {
+    return (
+      <div style={{ ...baseStyle, borderColor: "#4A4860", background: "#1A1A24", color: "#4A4860" }}>
+        <Compass size={20} />
+      </div>
+    );
+  }
+  if (status === "current") {
+    return (
+      <div style={{ ...baseStyle, borderColor: "#7C3AED", background: "rgba(124,58,237,0.15)", color: "#9D6FFF" }}>
+        <Rocket size={20} />
+        {/* Pulse ring */}
+        <span className="animate-ping" style={{
+          position: "absolute",
+          inset: "-6px",
+          borderRadius: "50%",
+          border: "2px solid rgba(124,58,237,0.4)",
+          pointerEvents: "none",
+        }} />
+      </div>
+    );
+  }
+  return (
+    <div style={{ ...baseStyle, borderColor: "rgba(255,255,255,0.08)", background: "#111118", color: "#4A4860" }}>
+      <Globe size={20} />
+    </div>
+  );
 }
 
 export default function RoadmapSection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  // Hook scroll offset calculations to container visibility bounds
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  // progressive timeline scale bound to scroll (0 to 1)
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const drawScale = useTransform(scrollYProgress, [0.15, 0.6], [0, 1]);
 
   const milestones: Milestone[] = [
     {
-      icon: <Compass size={22} />,
+      icon: <Compass size={20} />,
       quarter: "Q3 2024",
       title: "The Launchpad",
-      description: "Private beta release for early waitlist adopters. Core gamified courses unlocked.",
+      description: "Private beta release for early waitlist adopters. Core gamified courses unlocked for the first cohort.",
       status: "completed",
     },
     {
-      icon: <Orbit size={22} />,
+      icon: <Orbit size={20} />,
       quarter: "Q4 2024",
       title: "Orbital Insertion",
-      description: "Public launch. Integration of predictive AI debuggers and custom editor layouts.",
+      description: "Public launch. Integration of predictive AI debuggers, custom editor layouts, and community features.",
+      status: "completed",
+    },
+    {
+      icon: <Rocket size={20} />,
+      quarter: "Q2 2026",
+      title: "Ignition",
+      description: "CST launch, waitlist opens, first cohort onboards. The real journey begins.",
       status: "current",
     },
     {
-      icon: <Radio size={22} />,
-      quarter: "Q1 2025",
-      title: "Deep Space Network",
-      description: "Collaborative multiplayer coding lobbies. Live learning challenges in real-time.",
+      icon: <Globe size={20} />,
+      quarter: "Q4 2026",
+      title: "Deep Space",
+      description: "Full platform launch, Knowledge Marketplace opens, Ava AI coach goes live.",
       status: "future",
     },
   ];
 
   return (
-    <section
-      ref={containerRef}
-      className="py-28 relative z-10 bg-[#0e0e13]/30 overflow-hidden"
-      id="roadmap"
-    >
-      {/* Decorative nebula backdrop */}
-      <div className="absolute right-0 top-1/4 w-80 h-80 rounded-full bg-[#7c3aed]/5 blur-[100px] pointer-events-none" />
+    <section ref={containerRef} className="py-28 relative z-10 overflow-hidden" id="roadmap"
+      style={{ background: "rgba(14,14,19,0.4)" }}>
+      <div className="absolute right-0 top-1/4 w-80 h-80 rounded-full pointer-events-none"
+        style={{ background: "rgba(124,58,237,0.04)", filter: "blur(100px)" }} />
 
-      <div className="max-w-container-max mx-auto px-6 md:px-gutter">
-        {/* Section Header */}
-        <div className="text-center mb-20 select-none">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-[24px]">
+        {/* Header */}
+        <div className="text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="font-space font-bold text-2xl md:text-4xl text-starlight-white mb-4"
+            transition={{ duration: 0.5 }}
+            className="font-space font-bold mb-4"
+            style={{ fontSize: "52px", color: "#F0EEF8" }}
           >
             The Flight Path
           </motion.h2>
@@ -72,144 +159,114 @@ export default function RoadmapSection() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-sans text-xs md:text-sm text-on-surface-variant max-w-sm mx-auto"
+            transition={{ duration: 0.5, delay: 0.12 }}
+            className="font-sans"
+            style={{ color: "#8B89A0", fontSize: "16px" }}
           >
             Our core coordinates for launching the future of education.
           </motion.p>
         </div>
 
-        {/* DESKTOP TIMELINE SYSTEM */}
-        <div className="hidden md:block relative w-full pt-10 pb-20">
-          
-          {/* Main timeline track background */}
-          <div className="absolute top-[80px] left-0 right-0 h-[2px] bg-glass-stroke z-0">
-            {/* Scroll-drawn progress line */}
+        {/* DESKTOP TIMELINE */}
+        <div className="hidden md:block relative w-full pt-8 pb-16">
+          {/* Timeline track */}
+          <div className="absolute top-[72px] left-0 right-0 h-[2px] z-0"
+            style={{ background: "linear-gradient(to right, rgba(124,58,237,0.1), #7C3AED, rgba(124,58,237,0.1))" }}>
             <motion.div
-              style={{ scaleX: drawScale, originX: 0 }}
-              className="h-full bg-gradient-to-r from-pulsar-lavender to-nebula-purple shadow-[0_0_10px_#a78bfa]"
+              style={{ scaleX: drawScale, originX: 0, height: "100%" }}
+              className="bg-gradient-to-r from-[#9D6FFF] to-[#7C3AED] shadow-[0_0_10px_#7C3AED]"
             />
           </div>
 
-          {/* Milestone Columns */}
-          <div className="grid grid-cols-3 gap-10 relative z-10">
-            {milestones.map((item, index) => {
-              const isPast = item.status === "completed";
-              const isCurrent = item.status === "current";
+          {/* Milestone columns */}
+          <div className="grid grid-cols-4 gap-6 relative z-10">
+            {milestones.map((item, i) => (
+              <div key={item.quarter} className="flex flex-col items-center text-center">
+                {/* Node */}
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.15 }}
+                  className="mb-8"
+                >
+                  <MilestoneNode status={item.status} />
+                </motion.div>
 
-              return (
-                <div key={item.quarter} className="flex flex-col items-center text-center">
-                  
-                  {/* Glowing orbital node connector */}
-                  <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border-2 z-10 mb-8 select-none transition-all duration-500 ${
-                      isPast
-                        ? "bg-space-black border-pulsar-lavender text-pulsar-lavender shadow-[0_0_15px_rgba(167,139,250,0.4)]"
-                        : isCurrent
-                        ? "bg-gradient-to-tr from-primary-container to-nebula-purple border-pulsar-lavender text-starlight-white shadow-[0_0_20px_#7c3aed]"
-                        : "bg-space-black border-glass-stroke text-on-surface-variant/40"
-                    }`}
-                  >
-                    {item.icon}
-                  </motion.div>
-
-                  {/* Milestone Card content */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.2 + 0.1 }}
-                    className={`glass-panel p-6 rounded-2xl border transition-all duration-500 w-full ${
-                      isCurrent
-                        ? "border-pulsar-lavender shadow-[inset_0_0_20px_rgba(167,139,250,0.08)] bg-white/[0.04]"
-                        : "border-glass-stroke"
-                    }`}
-                  >
-                    <span className={`font-mono text-[10px] tracking-widest font-semibold uppercase mb-2 block ${
-                      isCurrent || isPast ? "text-pulsar-lavender" : "text-on-surface-variant/40"
-                    }`}>
-                      {item.quarter}
-                    </span>
-                    <h3 className="font-space font-semibold text-base text-starlight-white mb-2 tracking-wide">
-                      {item.title}
-                    </h3>
-                    <p className="font-sans text-[11px] md:text-xs text-on-surface-variant leading-relaxed">
-                      {item.description}
-                    </p>
-                  </motion.div>
-                </div>
-              );
-            })}
+                {/* Card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.15 + 0.1 }}
+                  style={{
+                    background: "#111118",
+                    border: item.status === "current" ? "1px solid rgba(124,58,237,0.35)" : "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: "16px",
+                    padding: "20px",
+                    width: "100%",
+                    boxShadow: item.status === "current" ? "inset 0 0 20px rgba(124,58,237,0.06)" : "none",
+                  }}
+                >
+                  <StatusPill status={item.status} />
+                  <span className="block font-mono text-[10px] tracking-widest mb-2" style={{ color: "#9D6FFF" }}>
+                    {item.quarter}
+                  </span>
+                  <h3 className="font-space font-semibold mb-2 text-left" style={{ fontSize: "15px", color: "#F0EEF8" }}>
+                    {item.title}
+                  </h3>
+                  <p className="font-sans text-xs leading-relaxed text-left" style={{ color: "#8B89A0" }}>
+                    {item.description}
+                  </p>
+                </motion.div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* MOBILE TIMELINE SYSTEM (VERTICAL FLOWS) */}
-        <div className="md:hidden relative pl-8 select-none py-4">
-          
-          {/* Main vertical pipeline track */}
-          <div className="absolute left-[15px] top-0 bottom-0 w-[2px] bg-glass-stroke z-0">
-            {/* Scroll-drawn progress line */}
-            <motion.div
-              style={{ scaleY: drawScale, originY: 0 }}
-              className="w-full bg-gradient-to-b from-pulsar-lavender to-nebula-purple shadow-[0_0_8px_#a78bfa]"
-            />
+        {/* MOBILE TIMELINE (vertical) */}
+        <div className="md:hidden relative pl-10 py-4">
+          <div className="absolute left-[18px] top-0 bottom-0 w-[2px] z-0"
+            style={{ background: "linear-gradient(to bottom, rgba(124,58,237,0.1), #7C3AED 50%, rgba(124,58,237,0.1))" }}>
+            <motion.div style={{ scaleY: drawScale, originY: 0, width: "100%", height: "100%" }}
+              className="bg-gradient-to-b from-[#9D6FFF] to-[#7C3AED]" />
           </div>
 
-          <div className="flex flex-col gap-12">
-            {milestones.map((item, index) => {
-              const isPast = item.status === "completed";
-              const isCurrent = item.status === "current";
-
-              return (
-                <div key={item.quarter} className="relative flex flex-col items-start">
-                  
-                  {/* Glowing orbital node connector */}
-                  <div
-                    className={`absolute -left-[35px] top-1.5 w-8 h-8 rounded-full flex items-center justify-center border-2 z-10 select-none transition-all duration-500 ${
-                      isPast
-                        ? "bg-space-black border-pulsar-lavender text-pulsar-lavender shadow-[0_0_10px_rgba(167,139,250,0.3)]"
-                        : isCurrent
-                        ? "bg-gradient-to-tr from-primary-container to-nebula-purple border-pulsar-lavender text-starlight-white shadow-[0_0_15px_#7c3aed]"
-                        : "bg-space-black border-glass-stroke text-on-surface-variant/30"
-                    }`}
-                  >
-                    <div className="scale-75">{item.icon}</div>
-                  </div>
-
-                  {/* Milestone Card */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.5 }}
-                    className={`glass-panel p-5 rounded-2xl w-full border ${
-                      isCurrent
-                        ? "border-pulsar-lavender bg-white/[0.04]"
-                        : "border-glass-stroke"
-                    }`}
-                  >
-                    <span className={`font-mono text-[9px] tracking-widest font-semibold uppercase mb-1.5 block ${
-                      isCurrent || isPast ? "text-pulsar-lavender" : "text-on-surface-variant/40"
-                    }`}>
-                      {item.quarter}
-                    </span>
-                    <h3 className="font-space font-semibold text-sm text-starlight-white mb-1.5 tracking-wide">
-                      {item.title}
-                    </h3>
-                    <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
-                      {item.description}
-                    </p>
-                  </motion.div>
+          <div className="flex flex-col gap-10">
+            {milestones.map((item, i) => (
+              <div key={item.quarter} className="relative flex flex-col items-start">
+                {/* Mobile node */}
+                <div className="absolute -left-[42px] top-0 scale-75 origin-left">
+                  <MilestoneNode status={item.status} />
                 </div>
-              );
-            })}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.4 }}
+                  style={{
+                    background: "#111118",
+                    border: item.status === "current" ? "1px solid rgba(124,58,237,0.35)" : "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: "16px",
+                    padding: "18px",
+                    width: "100%",
+                  }}
+                >
+                  <StatusPill status={item.status} />
+                  <span className="block font-mono text-[9px] tracking-widest mb-1" style={{ color: "#9D6FFF" }}>
+                    {item.quarter}
+                  </span>
+                  <h3 className="font-space font-semibold text-sm mb-1.5" style={{ color: "#F0EEF8" }}>
+                    {item.title}
+                  </h3>
+                  <p className="font-sans text-xs leading-relaxed" style={{ color: "#8B89A0" }}>
+                    {item.description}
+                  </p>
+                </motion.div>
+              </div>
+            ))}
           </div>
         </div>
-
       </div>
     </section>
   );

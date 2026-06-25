@@ -9,7 +9,6 @@ import FeaturesSection from "@/components/FeaturesSection";
 import MarqueeTicker from "@/components/MarqueeTicker";
 import RoadmapSection from "@/components/RoadmapSection";
 import WaitlistSection from "@/components/WaitlistSection";
-import XPProgressBar from "@/components/XPProgressBar";
 import Footer from "@/components/Footer";
 import TeamSection from "@/components/TeamSection";
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,7 +49,6 @@ function HomePage() {
               <MarqueeTicker direction="right" />
               <WaitlistSection />
             </main>
-            <XPProgressBar />
             <Footer />
           </motion.div>
         )}

@@ -197,8 +197,13 @@ export default function WaitlistSection() {
       {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] md:w-[35vw] md:h-[35vw] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-[620px] mx-auto px-6 md:px-gutter">
-        <div className="glass-panel p-8 md:p-12 rounded-3xl relative overflow-visible min-h-[380px] flex flex-col justify-center select-none shadow-[inset_0_0_30px_rgba(167,139,250,0.06)] border border-pulsar-lavender/20">
+      <div className="max-w-[620px] mx-auto px-6 md:px-[24px]">
+        <div className="relative overflow-visible min-h-[380px] flex flex-col justify-center select-none rounded-3xl p-8 md:p-12"
+          style={{
+            background: "#0F0F18",
+            border: "1px solid rgba(124,58,237,0.25)",
+            boxShadow: "0 0 80px rgba(124,58,237,0.1)",
+          }}>
           
           <AnimatePresence mode="wait">
             
@@ -228,14 +233,18 @@ export default function WaitlistSection() {
                       type="text"
                       placeholder="Full Name"
                       {...register("name")}
-                      className={`w-full bg-[#0a0a0f]/60 border rounded-xl px-5 py-3.5 text-xs md:text-sm text-starlight-white placeholder:text-on-surface-variant/50 focus:outline-none transition-all duration-300 font-sans ${
-                        errors.name
-                          ? "border-error focus:border-error focus:shadow-[0_0_12px_rgba(255,180,171,0.25)]"
-                          : "border-glass-stroke focus:border-pulsar-lavender focus:shadow-[0_0_12px_rgba(167,139,250,0.25)]"
-                      }`}
+                      className="w-full border rounded-[10px] px-4 py-[14px] text-sm font-sans focus:outline-none transition-colors duration-200"
+                      style={{
+                        background: "rgba(255,255,255,0.04)",
+                        border: errors.name ? "1px solid rgba(239,68,68,0.6)" : "1px solid rgba(255,255,255,0.1)",
+                        color: "#F0EEF8",
+                        fontSize: "14px",
+                      }}
+                      onFocus={(e) => { if (!errors.name) (e.target as HTMLInputElement).style.borderColor = "rgba(124,58,237,0.5)"; }}
+                      onBlur={(e) => { if (!errors.name) (e.target as HTMLInputElement).style.borderColor = "rgba(255,255,255,0.1)"; }}
                     />
                     {errors.name && (
-                      <span className="text-[10px] text-error flex items-center gap-1 font-mono tracking-wider uppercase pl-2">
+                      <span className="text-[10px] flex items-center gap-1 font-mono tracking-wider uppercase pl-1" style={{ color: "#f87171" }}>
                         <AlertCircle size={10} /> {errors.name.message}
                       </span>
                     )}
@@ -247,14 +256,18 @@ export default function WaitlistSection() {
                       type="email"
                       placeholder="Email Address"
                       {...register("email")}
-                      className={`w-full bg-[#0a0a0f]/60 border rounded-xl px-5 py-3.5 text-xs md:text-sm text-starlight-white placeholder:text-on-surface-variant/50 focus:outline-none transition-all duration-300 font-sans ${
-                        errors.email
-                          ? "border-error focus:border-error focus:shadow-[0_0_12px_rgba(255,180,171,0.25)]"
-                          : "border-glass-stroke focus:border-pulsar-lavender focus:shadow-[0_0_12px_rgba(167,139,250,0.25)]"
-                      }`}
+                      className="w-full border rounded-[10px] px-4 py-[14px] text-sm font-sans focus:outline-none transition-colors duration-200"
+                      style={{
+                        background: "rgba(255,255,255,0.04)",
+                        border: errors.email ? "1px solid rgba(239,68,68,0.6)" : "1px solid rgba(255,255,255,0.1)",
+                        color: "#F0EEF8",
+                        fontSize: "14px",
+                      }}
+                      onFocus={(e) => { if (!errors.email) (e.target as HTMLInputElement).style.borderColor = "rgba(124,58,237,0.5)"; }}
+                      onBlur={(e) => { if (!errors.email) (e.target as HTMLInputElement).style.borderColor = "rgba(255,255,255,0.1)"; }}
                     />
                     {errors.email && (
-                      <span className="text-[10px] text-error flex items-center gap-1 font-mono tracking-wider uppercase pl-2">
+                      <span className="text-[10px] flex items-center gap-1 font-mono tracking-wider uppercase pl-1" style={{ color: "#f87171" }}>
                         <AlertCircle size={10} /> {errors.email.message}
                       </span>
                     )}
@@ -306,20 +319,44 @@ export default function WaitlistSection() {
                     </div>
                   )}
 
-                  {/* Submit Trigger button */}
-                  <MagneticButton>
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full mt-2 inline-flex items-center justify-center px-6 py-4 rounded-xl bg-gradient-to-r from-primary-container to-nebula-purple text-starlight-white font-mono text-xs tracking-widest font-bold uppercase hover:glow-effect transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
-                    >
-                      {loading ? (
-                        <Loader2 size={16} className="animate-spin" />
-                      ) : (
-                        "Claim Your Spot"
-                      )}
-                    </button>
-                  </MagneticButton>
+                  {/* Submit button */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full mt-2 inline-flex items-center justify-center gap-2 disabled:opacity-50 select-none cursor-pointer transition-all duration-200"
+                    style={{
+                      background: "#7C3AED",
+                      borderRadius: "10px",
+                      padding: "16px",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: "13px",
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: "#F0EEF8",
+                      fontWeight: 600,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!loading) {
+                        (e.currentTarget as HTMLButtonElement).style.background = "#6D28D9";
+                        (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 30px rgba(124,58,237,0.35)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.background = "#7C3AED";
+                      (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+                    }}
+                  >
+                    {loading ? (
+                      <><Loader2 size={15} className="animate-spin" /> Securing your spot…</>
+                    ) : (
+                      "CLAIM YOUR SPOT"
+                    )}
+                  </button>
+
+                  {/* Trust line */}
+                  <p className="text-center font-sans text-[12px]" style={{ color: "#4A4860" }}>
+                    🔒 No spam. Unsubscribe anytime.
+                  </p>
                 </form>
               </motion.div>
             )}

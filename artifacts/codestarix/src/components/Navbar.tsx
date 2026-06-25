@@ -1,17 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import MagneticButton from "./MagneticButton";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -25,80 +21,94 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-glass-stroke py-3 shadow-md"
-          : "bg-transparent py-5"
-      }`}
+      style={{
+        backdropFilter: scrolled ? "blur(12px)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+        background: scrolled ? "rgba(10,10,15,0.7)" : "transparent",
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none",
+      }}
+      className="fixed top-0 w-full z-50 transition-all duration-300 py-4"
     >
-      <div className="flex justify-between items-center px-6 md:px-gutter max-w-container-max mx-auto">
-        {/* Brand Logo Alignment */}
-        <a href="/" className="flex items-center gap-2 select-none group">
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            <img
-              alt="Codestarix Rocket Logo"
-              className="h-7 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(167,139,250,0.6)] group-hover:scale-110 transition-transform duration-300"
-              src="/logo.png"
-            />
-          </div>
-          <span className="font-space font-bold tracking-wider text-lg md:text-xl text-starlight-white select-none">
+      <div className="flex justify-between items-center px-6 md:px-[24px] max-w-[1280px] mx-auto">
+        {/* Logo */}
+        <a href="/" className="flex items-center gap-2.5 select-none">
+          <img
+            alt="Codestarix Logo"
+            style={{ filter: "drop-shadow(0 0 8px rgba(157,111,255,0.4))" }}
+            className="h-7 w-auto object-contain"
+            src="/logo.png"
+          />
+          <span className="font-space font-bold tracking-wide text-[17px] text-[#F0EEF8]">
             Codestarix
           </span>
         </a>
 
-        {/* Desktop Nav Links */}
-        <div className="hidden md:flex items-center gap-10 font-mono text-xs tracking-wider">
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-9">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="text-on-surface-variant hover:text-pulsar-lavender transition-colors duration-300 relative py-1 group"
+              style={{ transition: "color 0.2s ease" }}
+              className="font-sans text-sm text-[#8B89A0] hover:text-[#F0EEF8]"
             >
               {link.name}
-              <span className="absolute -bottom-0.5 left-0 w-0 h-[2px] bg-gradient-to-r from-pulsar-lavender to-nebula-purple transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </div>
 
-        {/* Desktop Action Button */}
+        {/* Desktop CTA */}
         <div className="hidden md:block">
-          <MagneticButton>
-            <a
-              href="/#waitlist"
-              className="relative inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-gradient-to-r from-primary-container to-nebula-purple text-starlight-white font-mono text-xs tracking-widest font-semibold hover:glow-effect transition-all duration-300 active:scale-95 select-none"
-            >
-              Claim Spot
-            </a>
-          </MagneticButton>
+          <a
+            href="/#waitlist"
+            style={{
+              background: "#7C3AED",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              transition: "background 0.2s ease, box-shadow 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "#6D28D9";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 0 20px rgba(124,58,237,0.4)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "#7C3AED";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
+            }}
+            className="inline-flex items-center justify-center text-[#F0EEF8] font-mono text-xs tracking-widest font-semibold uppercase select-none"
+          >
+            Claim Spot
+          </a>
         </div>
 
-        {/* Mobile Menu Toggle Button */}
+        {/* Mobile Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-starlight-white p-2 focus:outline-none hover:bg-white/5 rounded-lg active:scale-90 duration-200"
+          className="md:hidden text-[#F0EEF8] p-2 focus:outline-none hover:bg-white/5 rounded-lg"
           aria-label="Toggle navigation menu"
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
-      {/* Mobile Drawer Slide Overlay */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute top-full left-0 w-full bg-[#0a0a0f]/95 backdrop-blur-2xl border-b border-glass-stroke md:hidden overflow-hidden"
+            transition={{ duration: 0.25 }}
+            className="absolute top-full left-0 w-full overflow-hidden md:hidden"
+            style={{ background: "rgba(10,10,15,0.95)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
           >
-            <div className="flex flex-col px-6 py-8 gap-6 font-mono text-sm tracking-wider">
+            <div className="flex flex-col px-6 py-7 gap-5">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-on-surface-variant hover:text-pulsar-lavender transition-colors py-2 border-b border-white/[0.03]"
+                  className="font-sans text-sm text-[#8B89A0] hover:text-[#F0EEF8] py-2 border-b border-white/[0.04] transition-colors"
                 >
                   {link.name}
                 </a>
@@ -106,9 +116,10 @@ export default function Navbar() {
               <a
                 href="/#waitlist"
                 onClick={() => setIsOpen(false)}
-                className="w-full text-center py-4 rounded-xl bg-gradient-to-r from-primary-container to-nebula-purple text-starlight-white font-semibold text-xs tracking-widest uppercase hover:glow-effect transition-all mt-4"
+                style={{ background: "#7C3AED", borderRadius: "8px" }}
+                className="w-full text-center py-3.5 text-[#F0EEF8] font-mono text-xs tracking-widest font-semibold uppercase mt-2"
               >
-                Join Waitlist
+                Claim Spot
               </a>
             </div>
           </motion.div>

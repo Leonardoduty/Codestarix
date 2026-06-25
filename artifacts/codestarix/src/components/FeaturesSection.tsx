@@ -1,7 +1,6 @@
-
 import React, { useRef, useState } from "react";
 import { Gamepad2, Bot, Award, Store } from "lucide-react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -13,101 +12,84 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, description, badge, isMuted }: FeatureCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  
-  // Motion values for tilt rotations
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
-  
-  // Spring configurations for smooth physical rebound
-  const springSettings = { stiffness: 150, damping: 18, mass: 0.4 };
-  const smoothX = useSpring(rotateX, springSettings);
-  const smoothY = useSpring(rotateY, springSettings);
-
-  // Spotlight coordinates
-  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
-  const [showSpotlight, setShowSpotlight] = useState(false);
+  const spring = { stiffness: 150, damping: 18, mass: 0.4 };
+  const smoothX = useSpring(rotateX, spring);
+  const smoothY = useSpring(rotateY, spring);
+  const [hovered, setHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
     if (!card) return;
-
     const rect = card.getBoundingClientRect();
-    const xCoord = e.clientX - rect.left;
-    const yCoord = e.clientY - rect.top;
-
-    // Track position relative to card boundaries
-    setSpotlightPos({ x: xCoord, y: yCoord });
-
-    // Calculate rotation: center points map to 0deg rotation
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // Max rotation is 12 degrees
-    const rX = ((yCoord - centerY) / centerY) * -12;
-    const rY = ((xCoord - centerX) / centerX) * 12;
-
-    rotateX.set(rX);
-    rotateY.set(rY);
-  };
-
-  const handleMouseEnter = () => {
-    setShowSpotlight(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowSpotlight(false);
-    rotateX.set(0);
-    rotateY.set(0);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    rotateX.set(((y - rect.height / 2) / (rect.height / 2)) * -8);
+    rotateY.set(((x - rect.width / 2) / (rect.width / 2)) * 8);
   };
 
   return (
     <motion.div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => { setHovered(false); rotateX.set(0); rotateY.set(0); }}
       style={{
         rotateX: smoothX,
         rotateY: smoothY,
         transformStyle: "preserve-3d",
+        background: "#111118",
+        borderRadius: "16px",
+        border: hovered ? "1px solid rgba(124,58,237,0.3)" : "1px solid rgba(255,255,255,0.06)",
+        boxShadow: hovered ? "0 0 30px rgba(124,58,237,0.08)" : "none",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
+        transition: "border 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease",
+        position: "relative",
+        padding: "32px",
+        cursor: "pointer",
       }}
-      className="relative glass-panel rounded-2xl p-8 md:p-10 select-none overflow-hidden group cursor-pointer transition-all duration-300 active:scale-[0.98]"
     >
-      {/* Specular spotlight glow layer */}
-      {showSpotlight && (
-        <div
-          className="absolute inset-0 pointer-events-none z-0 mix-blend-overlay transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle 240px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(167, 139, 250, 0.2) 0%, transparent 80%)`,
-          }}
-        />
-      )}
-
-      {/* Inner ambient light gradient */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/10 to-transparent blur-[20px] pointer-events-none" />
-
-      {/* Coming Soon Badge in Top Right */}
+      {/* Coming Soon badge */}
       {badge && (
-        <div className="absolute top-6 right-6 px-2.5 py-0.5 rounded-full border border-pulsar-lavender/30 bg-pulsar-lavender/5 text-[10px] font-mono font-medium tracking-wide text-pulsar-lavender/80">
+        <div style={{
+          position: "absolute",
+          top: "16px",
+          right: "16px",
+          background: "rgba(124,58,237,0.15)",
+          border: "1px solid rgba(124,58,237,0.3)",
+          color: "#9D6FFF",
+          fontSize: "11px",
+          fontFamily: "'JetBrains Mono', monospace",
+          borderRadius: "20px",
+          padding: "4px 10px",
+          letterSpacing: "0.05em",
+        }}>
           {badge}
         </div>
       )}
 
-      {/* Content wrapper with translateZ to pop forward in 3D space */}
-      <div className="relative z-10 flex flex-col items-start" style={{ transform: "translateZ(35px)" }}>
-        
-        {/* Animated icon circle */}
-        <div className={`p-4 rounded-xl bg-white/[0.02] border border-pulsar-lavender/10 text-pulsar-lavender group-hover:text-tertiary group-hover:border-tertiary/20 transition-colors duration-300 mb-6 ${isMuted ? "opacity-60" : ""}`}>
+      <div style={{ transform: "translateZ(20px)" }}>
+        {/* Icon box */}
+        <div style={{
+          background: "rgba(124,58,237,0.12)",
+          borderRadius: "12px",
+          width: "48px",
+          height: "48px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#9D6FFF",
+          marginBottom: "24px",
+          opacity: isMuted ? 0.6 : 1,
+        }}>
           {icon}
         </div>
 
-        {/* Feature Title */}
-        <h3 className="font-space font-semibold text-lg md:text-xl text-starlight-white mb-3 tracking-wide">
+        <h3 className="font-space font-semibold mb-3" style={{ fontSize: "22px", color: "#F0EEF8" }}>
           {title}
         </h3>
-
-        {/* Description text */}
-        <p className="font-sans text-xs md:text-sm text-on-surface-variant leading-relaxed">
+        <p className="font-sans text-sm leading-relaxed" style={{ color: "#8B89A0" }}>
           {description}
         </p>
       </div>
@@ -116,30 +98,26 @@ function FeatureCard({ icon, title, description, badge, isMuted }: FeatureCardPr
 }
 
 export default function FeaturesSection() {
-  const list = [
+  const features = [
     {
-      icon: <Gamepad2 size={26} />,
+      icon: <Gamepad2 size={24} />,
       title: "Gamified Learning",
-      description:
-        "Learn coding through XP, levels, streaks, and badges. Every lesson feels like a game. Every skill unlocked feels like a win. You'll actually want to come back tomorrow.",
+      description: "Learn coding through XP, levels, streaks, and badges. Every lesson feels like a game. Every skill unlocked feels like a win. You'll actually want to come back tomorrow.",
     },
     {
-      icon: <Bot size={26} />,
+      icon: <Bot size={24} />,
       title: "AI-Era Coding Skills",
-      description:
-        "The world builds with AI now. We teach you how to use it properly — how to prompt correctly, spot the mistakes AI makes, and ship code that actually works instead of hoping it does.",
+      description: "The world builds with AI now. We teach you how to use it properly — how to prompt correctly, spot the mistakes AI makes, and ship code that actually works instead of hoping it does.",
     },
     {
-      icon: <Award size={26} />,
+      icon: <Award size={24} />,
       title: "Coding Scholarship Test (CST)",
-      description:
-        "Prove your skills. Take the CST, earn a certificate, and win free access. It's the exam that rewards you for learning — and gives you something real to show for it.",
+      description: "Prove your skills. Take the CST, earn a certificate, and win free access. It's the exam that rewards you for learning — and gives you something real to show for it.",
     },
     {
-      icon: <Store size={26} />,
+      icon: <Store size={24} />,
       title: "Knowledge Marketplace",
-      description:
-        "A marketplace where top developers sell their own courses within the Codestarix ecosystem. More perspectives. More depth. Launching Q1 2027.",
+      description: "A marketplace where top developers sell their own courses within the Codestarix ecosystem. More perspectives. More depth. Launching Q1 2027.",
       badge: "Coming Soon",
       isMuted: true,
     },
@@ -147,19 +125,19 @@ export default function FeaturesSection() {
 
   return (
     <section className="py-24 relative z-10" id="features">
-      {/* Decorative background glow node */}
-      <div className="absolute -top-10 left-1/3 w-96 h-96 rounded-full bg-tertiary/5 blur-[120px] pointer-events-none" />
+      <div className="absolute -top-10 left-1/3 w-96 h-96 rounded-full pointer-events-none"
+        style={{ background: "rgba(124,58,237,0.04)", filter: "blur(120px)" }} />
 
-      <div className="max-w-container-max mx-auto px-6 md:px-gutter">
-        
-        {/* Section Header */}
-        <div className="text-center mb-16 select-none">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-[24px]">
+        {/* Header */}
+        <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="font-space font-bold text-2xl md:text-4xl text-starlight-white mb-4"
+            transition={{ duration: 0.5 }}
+            className="font-space font-semibold mb-4"
+            style={{ fontSize: "52px", color: "#F0EEF8" }}
           >
             What you'll master
           </motion.h2>
@@ -167,30 +145,25 @@ export default function FeaturesSection() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-sans text-xs md:text-sm text-on-surface-variant max-w-md mx-auto"
+            transition={{ duration: 0.5, delay: 0.12 }}
+            className="font-sans"
+            style={{ fontSize: "18px", color: "#8B89A0" }}
           >
             Real skills. Real projects. Built for the AI era.
           </motion.p>
         </div>
 
-        {/* 3D tilt features grid - 2x2 layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {list.map((item, index) => (
+        {/* 2×2 grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+          {features.map((item, i) => (
             <motion.div
               key={item.title}
-              initial={{ opacity: 0, y: 25 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
             >
-              <FeatureCard
-                icon={item.icon}
-                title={item.title}
-                description={item.description}
-                badge={item.badge}
-                isMuted={item.isMuted}
-              />
+              <FeatureCard {...item} />
             </motion.div>
           ))}
         </div>
