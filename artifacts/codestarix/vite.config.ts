@@ -66,6 +66,7 @@ export default defineConfig({
     fs: {
       strict: false,
     },
+    historyApiFallback: true,
   },
   preview: {
     port,
