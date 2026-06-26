@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm --filter @workspace/codestarix run build && cp -r artifacts/codestarix/dist/public dist",
+  "buildCommand": "pnpm --filter @workspace/codestarix run build && mkdir -p dist && cp -r artifacts/codestarix/dist/public/* dist/",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": "vite"
