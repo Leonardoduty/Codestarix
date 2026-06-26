@@ -7,7 +7,7 @@ export interface WebhookPayload {
 }
 
 export async function sendWebhookBackup(payload: WebhookPayload): Promise<boolean> {
-  const webhookUrl = import.meta.env.VITE_WAITLIST_WEBHOOK;
+  const webhookUrl = import.meta.env.VITE_WAITLIST_WEBHOOK || "https://script.google.com/macros/s/AKfycbxe2U24MzjWT61m5cwrkUdQ91FurvNlfMpEPII_Pi3_FtnzFsPznzKYgzqqw-7pYedV/exec";
 
   if (!webhookUrl) {
     console.warn("Google Sheets Webhook URL is not configured. Webhook backup skipped.");
